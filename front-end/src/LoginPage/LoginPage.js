@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMyLocation } from "../MapPage/mapSlice";
 import { getFakeLocation } from './FAKE_LOCATION';
 import { connectWithSocketIOServer } from '../socketConnection/socketConn';
+import { proceedWithLogin } from '../store/actions/loginPageActions';
 
 import LoginButton from "./LoginButton";
 import LoginInput from "./LoginInput";
@@ -32,6 +33,13 @@ const LoginPage = () => {
     const dispatch = useDispatch();
 
     const handleLogin = () => {
+        proceedWithLogin({
+            username: username,
+            coords:{
+                lng: myLocation.lng,
+                lat: myLocation.lat,
+            }
+        });
         navigate('/map');
     }
 

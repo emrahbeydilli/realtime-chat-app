@@ -49,13 +49,17 @@ const removeOnlineUser = (id) =>{
     if (onlineUsers[id]) {
         delete onlineUsers[id];
     }
-    console.log("remove",onlineUsers);
+    console.log("remove:",onlineUsers);
 }
 
 const loginEventHandler =(socket,data)=>{
+    socket.join('logged-users');
+    
     onlineUsers[socket.id] = {
         username: data.username,
         coords: data.coords,
     };
-    console.log("login",onlineUsers);
+    console.log("login:",onlineUsers);
+
+    io.to('')
 }
