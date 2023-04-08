@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMyLocation } from "../MapPage/mapSlice";
+import { getFakeLocation } from './FAKE_LOCATION';
+import { connectWithSocketIOServer } from '../socketConnection/socketConn';
 
 import LoginButton from "./LoginButton";
 import LoginInput from "./LoginInput";
@@ -24,6 +26,8 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [locationErrorOccured, setLocationErrorOccured] = useState(false);
 
+    const myLocation = useSelector(state => state.map.myLocation);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -32,9 +36,12 @@ const LoginPage = () => {
     }
 
     const onSuccess = (position) => {
-        console.log(position.coords.latitude,position.coords.longitude);
+        // console.log(position);
         dispatch(
-            setMyLocation({})
+            setMyLocation({
+                lat:position.coords.latitude,
+                lng:position.coords.longitude,
+            })
         );
     };
 
@@ -45,11 +52,18 @@ const LoginPage = () => {
     }
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            onSuccess,
-            onError,
-            locationOptions);
+        // navigator.geolocation.getCurrentPosition(
+        //     onSuccess,
+        //     onError,
+        //     locationOptions);
+        onSuccess(getFakeLocation());
     }, []);
+
+    useEffect(()=>{
+        if (myLocation) {
+            connectWithSocketIOServer();
+        }
+    },[myLocation]);
 
     return (
         <div className='l_page_main_container'>
