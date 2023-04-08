@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import mapReducer from "../MapPage/MapPage";
-
+import mapReducer from "../MapPage/mapSlice";
 
 const store = configureStore({
     reducer:{
-        map:mapReducer
-    }
+        map:mapReducer,
+    },
 });
 
 export default store;

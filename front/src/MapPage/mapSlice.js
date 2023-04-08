@@ -9,13 +9,16 @@ const initialState = {
 export const mapSlice = createSlice({
     name: 'map',
     initialState,
-    reducers:{
-        setMyLocation:(state,action)={
+    reducers: {
+        setMyLocation: (state, action) => {
+            console.log("mapslice",action.payload);
             state.myLocation = action.payload;
-        }
+        },
     }
 });
 
-export const {setMyLocation} = mapSlice.actions;
+export const {
+    setMyLocation
+} = mapSlice.actions;
 
 export default mapSlice.reducer;
