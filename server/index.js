@@ -29,6 +29,7 @@ io.on('connection',(socket)=>{
     });
     socket.on('disconnect',()=>{
         disconnectEventHandler(socket.id);
+
     });
 });
 
@@ -43,6 +44,7 @@ server.listen(PORT, () => {
 const disconnectEventHandler = (id) =>{
     console.log(`user disconnected of the id:${id}`);
     removeOnlineUser(id);
+    broadcastDisconnectedUserDetails(id);
 }
 
 const removeOnlineUser = (id) =>{
@@ -51,6 +53,10 @@ const removeOnlineUser = (id) =>{
     }
     console.log("remove:",onlineUsers);
 }
+
+const broadcastDisconnectedUserDetails = (disconnectedUserSocketId) =>{
+    io.to('logged-users').emit('user-disconnected',disconnectedUserSocketId);
+};
 
 const loginEventHandler =(socket,data)=>{
     socket.join('logged-users');
@@ -61,5 +67,19 @@ const loginEventHandler =(socket,data)=>{
     };
     console.log("login:",onlineUsers);
 
-    io.to('')
+    io.to('logged-users').emit("online-users",convertOnlineUsersToArray());
+}
+
+const convertOnlineUsersToArray = () =>{
+    const onlineUsersArray = [];
+
+    Object.entries(onlineUsers).forEach(([key,value])=>{
+        onlineUsersArray.push({
+            socketId: key,
+            username: value.username,
+            coords: value.coords,
+        });
+    });
+
+    return onlineUsersArray;
 }
